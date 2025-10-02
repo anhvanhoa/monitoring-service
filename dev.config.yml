@@ -1,0 +1,7 @@
+node_env: "development"
+url_db: "postgres://pg:123456@localhost:5432/monitoring_service_db?sslmode=disable"
+name_service: "MonitoringService"
+port_grpc: 50057
+host_grpc: "localhost"
+interval_check: "20s"
+timeout_check: "15s"

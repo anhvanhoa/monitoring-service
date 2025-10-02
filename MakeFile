@@ -1,0 +1,60 @@
+NAME_DB=monitoring_service_db
+PORT_DB=5432
+USER_DB=pg
+PASSWORD_DB=123456
+HOST_DB=localhost
+SSL_MODE=disable
+DB_URL="postgres://${USER_DB}:${PASSWORD_DB}@${HOST_DB}:${PORT_DB}/${NAME_DB}?sslmode=${SSL_MODE}"
+NAME_CONTAINER=postgis-gis
+MIGRATIONS_DIR = ./migrations
+
+.PHONY: help up down version force create
+
+help: ## Show this help message
+	@echo "Available commands:"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+up: ## Run all pending migrations
+	migrate -path ${MIGRATIONS_DIR} -database ${DB_URL} up
+
+down: ## Rollback the last migration
+	migrate -path ${MIGRATIONS_DIR} -database ${DB_URL} down
+
+force: ## Force the last migration
+	migrate -path ${MIGRATIONS_DIR} -database ${DB_URL} force $(v)
+
+reset: ## Reset database completely
+	migrate -path ${MIGRATIONS_DIR} -database ${DB_URL} reset
+
+drop: ## Drop database
+	migrate -path ${MIGRATIONS_DIR} -database ${DB_URL} drop
+
+create:
+	migrate create -ext sql -dir ${MIGRATIONS_DIR} -seq $(name)
+
+docker-drop-db: ## Drop database in the container
+	docker exec -it ${NAME_CONTAINER} dropdb --force -U ${USER_DB} ${NAME_DB}
+
+docker-create-db: ## Create database in the container
+	docker exec -it ${NAME_CONTAINER} createdb -U ${USER_DB} ${NAME_DB}
+
+create-db: ## Create database
+	createdb -U ${USER_DB} ${NAME_DB}
+
+drop-db: ## Drop database
+	dropdb -U ${USER_DB} ${NAME_DB}
+
+build: ## Build the application
+	go build -o ./bin/app cmd/main.go
+
+run: ## Run the application
+	go run cmd/main.go
+
+client: ## Run the client application
+	go run cmd/client/main.go
+
+test: ## Run the tests client
+	cd cmd/client && ./run_tests.sh
+
+seed: ## Run all pending migrations
+	go run script/seed/main.go ${type}
