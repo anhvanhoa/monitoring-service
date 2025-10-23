@@ -1,7 +1,28 @@
 node_env: "development"
-url_db: "postgres://pg:123456@localhost:5432/monitoring_service_db?sslmode=disable"
+secret_service: "MonitoringServiceSecret"
+url_db: "postgres://postgres:123456@localhost:5432/monitoring_service_db?sslmode=disable"
 name_service: "MonitoringService"
 port_grpc: 50057
 host_grpc: "localhost"
 interval_check: "20s"
 timeout_check: "15s"
+
+db_cache:
+    addr: 'localhost:6379'
+    db: 1
+    password: ''
+    max_idle: 10
+    max_active: 100
+    idle_timeout: 240
+    network: 'tcp'
+
+permission_service_addr: 'localhost:50051'
+
+grpc_clients:
+    - Name: 'PermissionService'
+      ServerAddress: 'localhost:50051'
+      MaxRetries: 3
+      Time: 20
+      Timeout: 15
+      PermitWithoutStream: true
+      SecretInternal: 'PermissionServiceSecret'

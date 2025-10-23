@@ -15,8 +15,7 @@ type RepositoriesImpl struct {
 	eaRepository repository.EnvironmentalAlertRepository
 }
 
-func InitRepositories(db *pg.DB) Repositories {
-	helper := utils.NewHelper()
+func InitRepositories(db *pg.DB, helper utils.Helper) Repositories {
 	return &RepositoriesImpl{
 		eaRepository: NewEnvironmentalAlertRepository(db, helper),
 	}
