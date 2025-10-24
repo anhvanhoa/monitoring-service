@@ -7,7 +7,6 @@ import (
 	"monitoring_service/infrastructure/grpc_service"
 	environmental_alert_service "monitoring_service/infrastructure/grpc_service/environmental_alert"
 
-	"github.com/anhvanhoa/service-core/domain/discovery"
 	gc "github.com/anhvanhoa/service-core/domain/grpc_client"
 )
 
@@ -19,20 +18,6 @@ func StartGRPCServer() {
 	app := bootstrap.App()
 	env := app.Env
 	log := app.Log
-
-	discoveryConfig := &discovery.DiscoveryConfig{
-		ServiceName:   env.NameService,
-		ServicePort:   env.PortGrpc,
-		ServiceHost:   env.HostGprc,
-		IntervalCheck: env.IntervalCheck,
-		TimeoutCheck:  env.TimeoutCheck,
-	}
-
-	discovery, err := discovery.NewDiscovery(discoveryConfig)
-	if err != nil {
-		log.Fatal("Failed to create discovery: " + err.Error())
-	}
-	discovery.Register()
 
 	clientFactory := gc.NewClientFactory(env.GrpcClients...)
 	permissionClient := grpc_client.NewPermissionClient(clientFactory.GetClient(env.PermissionServiceAddr))

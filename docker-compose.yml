@@ -1,23 +1,41 @@
-version: '3.8'
-
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: postgres_container
-    environment:
-      POSTGRES_DB: crop_service_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123456
+  monitoring-service:
+    build:
+      context: .
+      dockerfile: DockerFile
+      secrets:
+        - github_token
+    image: monitoring-service:latest
+    container_name: monitoring-service_app
     ports:
-      - "5432:5432"
+      - "50057:50057"
+    networks:
+      - sf_network
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - CONFIG_FILE=${CONFIG_FILE}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./migrations:/docker-entrypoint-initdb.d
+      - ${CONFIG_FILE}:/config/${CONFIG_FILE}
+    restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:50057/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-volumes:
-  postgres_data:
+secrets:
+  github_token:
+    file: ./github_token.txt
+
+networks:
+  sf_network:
+    external: true
