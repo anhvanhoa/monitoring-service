@@ -2,7 +2,7 @@ node_env: "development"
 secret_service: "MonitoringServiceSecret"
 url_db: "postgres://postgres:123456@localhost:5432/monitoring_service_db?sslmode=disable"
 name_service: "MonitoringService"
-port_grpc: 50057
+port_grpc: 40057
 host_grpc: "localhost"
 interval_check: "20s"
 timeout_check: "15s"

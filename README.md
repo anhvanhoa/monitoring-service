@@ -90,7 +90,7 @@ Cập nhật chuỗi kết nối cơ sở dữ liệu trong `config.yml`:
 node_env: "development"
 url_db: "postgres://pg:123456@localhost:5432/monitoring_service_db?sslmode=disable"
 name_service: "MonitoringService"
-port_grpc: 50057
+port_grpc: 40057
 host_grpc: "localhost"
 interval_check: "20s"
 timeout_check: "15s"

@@ -8,7 +8,7 @@ services:
     image: monitoring-service:latest
     container_name: monitoring_service_app
     ports:
-      - "50057:50057"
+      - "40057:40057"
     networks:
       - sf_network
     environment:
@@ -25,7 +25,7 @@ services:
           "--no-verbose",
           "--tries=1",
           "--spider",
-          "http://localhost:50057/health",
+          "http://localhost:40057/health",
         ]
       interval: 30s
       timeout: 10s
