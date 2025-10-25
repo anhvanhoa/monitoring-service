@@ -6,7 +6,7 @@ services:
       secrets:
         - github_token
     image: monitoring-service:latest
-    container_name: monitoring-service_app
+    container_name: monitoring_service_app
     ports:
       - "50057:50057"
     networks:
