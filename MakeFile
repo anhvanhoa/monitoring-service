@@ -59,5 +59,6 @@ test: ## Run the tests client
 seed: ## Run all pending migrations
 	go run script/seed/main.go ${type}
 
+# make docker-build NODE_ENV=production CONFIG_FILE=./monitoring_service.config.yaml
 docker-build: ## Build the application and run it in the container
-	export NODE_ENV=${NODE_ENV} CONFIG_FILE=${CONFIG_FILE} && docker compose up -d --build
+	export NODE_ENV=${NODE_ENV} CONFIG_FILE=${CONFIG_FILE} && docker compose up -d --build 

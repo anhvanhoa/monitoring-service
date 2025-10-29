@@ -6,6 +6,7 @@ import (
 	grpc_service "github.com/anhvanhoa/service-core/bootstrap/grpc"
 	"github.com/anhvanhoa/service-core/domain/cache"
 	"github.com/anhvanhoa/service-core/domain/log"
+	"github.com/anhvanhoa/service-core/domain/token"
 	"github.com/anhvanhoa/service-core/domain/user_context"
 	proto_environmental_alert "github.com/anhvanhoa/sf-proto/gen/environmental_alert/v1"
 	"google.golang.org/grpc"
@@ -22,7 +23,9 @@ func NewGRPCServer(
 		PortGRPC:     env.PortGrpc,
 		NameService:  env.NameService,
 	}
-	middleware := grpc_service.NewMiddleware()
+	middleware := grpc_service.NewMiddleware(
+		token.NewToken(env.AccessSecret),
+	)
 	return grpc_service.NewGRPCServer(
 		config,
 		log,
